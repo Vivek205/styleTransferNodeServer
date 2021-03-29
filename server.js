@@ -99,10 +99,10 @@ app.post("/styletransferai", async (req, res) => {
     console.error("error", error);
     return res.status(500).send(error.message)
   }
-  const outputImage = Buffer.from(outputImageData, 'base64');
-  res.writeHead(200, {
-    'Content-Type': 'image/png',
-    'Content-Length': outputImage.length
-  });
-  res.end(outputImage)
+//   const outputImage = Buffer.from(outputImageData, 'base64');
+//   res.writeHead(200, {
+//     'Content-Type': 'image/png',
+//     'Content-Length': outputImage.length
+//   });
+  res.send({base64Image:outputImageData})
 });
