@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "snet-sdk": "file:../snet-sdk-1.0.0-beta.6.tgz",
+    "@vivek205/node-sdk-dev": "^1.0.0",
     "web3": "1.3.1"
   },
   "devDependencies": {

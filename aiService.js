@@ -3,7 +3,7 @@
 * dotenv must be on the top of the entry file of the project
 */
 import dotenv from "dotenv";
-import SnetSDK, { DefaultPaymentStrategy } from "snet-sdk";
+import SnetSDK, { DefaultPaymentStrategy } from "@vivek205/node-sdk-dev";
 /**
  * 1: Update the import paths for service and message grpc stubs
  */
