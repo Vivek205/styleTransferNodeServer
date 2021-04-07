@@ -6,17 +6,17 @@ import SnetSDK, { DefaultPaymentStrategy } from "@vivek205/node-sdk-dev";
 /**
  * 1: Update the import paths for service and message grpc stubs
  */
-import service from "./grpc_stubs/style_transfer/style_transfer_grpc_pb";
-import messages from "./grpc_stubs/style_transfer/style_transfer_pb";
+import service from "./grpc_stubs/example_service/example_service_grpc_pb";
+import messages from "./grpc_stubs/example_service/example_service_pb";
 import config from "./config";
 
 dotenv.config();
 const sdk = new SnetSDK(config);
 
-const orgId = "snet";
-const serviceId = "style-transfer";
+const orgId = "6ce80f485dae487688c3a083688819bb";
+const serviceId = "test_freecall";
 const groupName = "default_group";
-const paymentStrategy = new DefaultPaymentStrategy(2);
+const paymentStrategy = new DefaultPaymentStrategy(100);
 let tokenToMakeFreeCall = process.env.FREE_CALL_TOKEN ? process.env.FREE_CALL_TOKEN.toUpperCase() : "";
 tokenToMakeFreeCall = Boolean(tokenToMakeFreeCall)
   ? tokenToMakeFreeCall.startsWith("0X")
@@ -40,16 +40,18 @@ export const getServiceClient = async () => {
     const serviceClient = await sdk.createServiceClient(
       orgId,
       serviceId,
-      service.StyleTransferClient,
+      service.CalculatorClient,
       groupName,
       paymentStrategy,
       serviceClientOptions
     );
     return serviceClient;
-  } catch (error) {}
+  } catch (error) {
+    console.log("service client create error", error);
+  }
 };
 
-const aiService = async (content = "", style = "", serviceClientWithToken) => {
+const exampleService = async (numA, numB, serviceClientWithToken) => {
   console.log("service is invoked");
   let serviceClient = serviceClientWithToken;
   try {
@@ -59,21 +61,16 @@ const aiService = async (content = "", style = "", serviceClientWithToken) => {
     /**
      * 2: Initialize the request object and the set the required input values
      */
-    const request = new messages.TransferImageStyleRequest();
-    request.setContent(content);
-    request.setStyle(style);
-    request.setContentsize(640);
-    request.setStylesize(640);
-    request.setPreservecolor(false);
-    request.setAlpha(1);
-    request.setCrop(false);
-    request.setSaveext("");
-
+    const request = new messages.Numbers();
+    request.setA(numA);
+    request.setB(numB);
+    console.log("created request");
     return new Promise((resolve, reject) => {
       /**
        * 3: Change the method name according to your service
        */
-      serviceClient.service.transfer_image_style(request, (err, result) => {
+      serviceClient.service.div(request, (err, result) => {
+        console.log("service call error", err);
         if (err) {
           return reject(err);
         }
@@ -82,7 +79,7 @@ const aiService = async (content = "", style = "", serviceClientWithToken) => {
     });
   } catch (error) {
     console.log("promise error", error);
-    closeConnection();
+    throw error;
   }
 };
-export default aiService;
+export default exampleService;

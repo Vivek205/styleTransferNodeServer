@@ -1128,6 +1128,24 @@
   dependencies:
     "@types/node" "*"
 
+"@vivek205/node-sdk-dev@^1.0.0":
+  version "1.0.0"
+  resolved "https://npm.pkg.github.com/download/@vivek205/node-sdk-dev/1.0.0/dc7d9bd937f4a115dd3451306a38639262e9a5297f9a540691f60ce3ac71a685#b4259db3c85596ed0f92a330cc9949c1ef50e7ea"
+  integrity sha512-Rt/Gea+8JL9ZsRISPVf5YxJ2d8+82aYknOsKoUg1KggWcPNgm7pFuVWp08G9bIed3yur5ZHgPLomZvR7dZJ2qg==
+  dependencies:
+    bignumber.js "^8.1.1"
+    es6-promise "^4.2.6"
+    ethereumjs-tx "^1.3.7"
+    ethjs "^0.4.0"
+    google-protobuf "^3.15.6"
+    grpc "^1.24.6"
+    ipfs-http-client "^30.1.1"
+    lodash latest
+    singularitynet-platform-contracts "^0.3.4"
+    singularitynet-token-contracts "^2.0.1"
+    web3 "^1.3.4"
+    winston "^3.3.3"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -2082,7 +2100,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-cors@^2.8.1:
+cors@^2.8.1, cors@^2.8.5:
   version "2.8.5"
   resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.5.tgz#eac11da51592dd86b9f06f6e7ac293b3df875d29"
   integrity sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
@@ -2722,6 +2740,13 @@ expand-brackets@^2.1.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+express-request-id@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/express-request-id/-/express-request-id-1.4.1.tgz#66feaf1f0be3deca13f3abfe1c098e49b12f2c28"
+  integrity sha512-qpxK6XhDYtdx9FvxwCHkUeZVWtkGbWR87hBAzGECfwYF/QQCPXEwwB2/9NGkOR1tT7/aLs9mma3CT0vjSzuZVw==
+  dependencies:
+    uuid "^3.3.2"
 
 express@^4.14.0, express@^4.17.1:
   version "4.17.1"
@@ -5658,23 +5683,6 @@ snapdragon@^0.8.1:
     source-map "^0.5.6"
     source-map-resolve "^0.5.0"
     use "^3.1.0"
-
-"snet-sdk@file:../snet-sdk-1.0.0-beta.6.tgz":
-  version "1.0.0-beta.6"
-  resolved "file:../snet-sdk-1.0.0-beta.6.tgz#3d0604f78de531ad07733667be5b18afdc1c6097"
-  dependencies:
-    bignumber.js "^8.1.1"
-    es6-promise "^4.2.6"
-    ethereumjs-tx "^1.3.7"
-    ethjs "^0.4.0"
-    google-protobuf "^3.15.6"
-    grpc "^1.24.6"
-    ipfs-http-client "^30.1.1"
-    lodash latest
-    singularitynet-platform-contracts "^0.3.4"
-    singularitynet-token-contracts "^2.0.1"
-    web3 "^1.3.4"
-    winston "^3.3.3"
 
 source-map-resolve@^0.5.0:
   version "0.5.3"
