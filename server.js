@@ -1,12 +1,17 @@
 import express from "express";
-import aiService from "./aiService";
-import exampleService, { getServiceClient } from "./exampleService";
+import aiService, {getServiceClient as getStyleServiceClient} from "./aiService";
+import exampleService, { getServiceClient as getExampleServiceClient } from "./exampleService";
 import addRequestId from "express-request-id";
 
-let localConcurrencyToken = "";
-let localChannelId = "";
-let tokenCreationInProgress = false;
-let serviceClient;
+let exampleServiceConcurrencyToken = "";
+let exampleServiceChannelId = "";
+let exampleServiceTokenCreationInProgress = false;
+let exampleServiceClient;
+
+let styleServiceConcurrencyToken = ""
+let styleServiceChannelId = ""
+let styleServiceTokenCreationInProgress = false
+let styleServiceClient;
 
 const app = express();
 const port = 3000;
@@ -22,16 +27,14 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-
-
 app.post("/test", async (req, res) => {
   const { a, b } = req.body;
   const log = (...args) => {
     console.log("reqID: ", req.id, " ", ...args);
   };
 
-  if (!serviceClient) {
-    serviceClient = await getServiceClient();
+  if (!exampleServiceClient) {
+    exampleServiceClient = await getExampleServiceClient();
   }
 
   function waitForTokenCreation() {
@@ -39,7 +42,7 @@ app.post("/test", async (req, res) => {
     return new Promise((resolve, reject) => {
       const checking = setInterval(() => {
         log("waiting for new concurrency Token");
-        if (!tokenCreationInProgress) {
+        if (!exampleServiceTokenCreationInProgress) {
           clearInterval(checking);
           resolve();
         }
@@ -50,12 +53,12 @@ app.post("/test", async (req, res) => {
   const createConcurrencyToken = async () => {
     try {
       log("creating new token");
-      tokenCreationInProgress = true;
-      const { concurrencyToken, channelId } = await serviceClient.getConcurrencyTokenAndChannelId();
+      exampleServiceTokenCreationInProgress = true;
+      const { concurrencyToken, channelId } = await exampleServiceClient.getConcurrencyTokenAndChannelId();
       log("new token", concurrencyToken);
-      tokenCreationInProgress = false;
-      localConcurrencyToken = concurrencyToken;
-      localChannelId = channelId;
+      exampleServiceTokenCreationInProgress = false;
+      exampleServiceConcurrencyToken = concurrencyToken;
+      exampleServiceChannelId = channelId;
     } catch (error) {
       log("create token error", error);
     }
@@ -63,8 +66,8 @@ app.post("/test", async (req, res) => {
 
   const invokeAiService = async () => {
     try {
-      serviceClient.setConcurrencyTokenAndChannelId(localConcurrencyToken, localChannelId);
-      const response = await exampleService(a, b, serviceClient);
+      exampleServiceClient.setConcurrencyTokenAndChannelId(exampleServiceConcurrencyToken, exampleServiceChannelId);
+      const response = await exampleService(a, b, exampleServiceClient);
       log("response", response.getValue());
       res.send({ output: response.getValue() });
     } catch (error) {
@@ -74,7 +77,7 @@ app.post("/test", async (req, res) => {
   };
   const recursion = async (shouldCreateNewToken = false) => {
     try {
-      if (tokenCreationInProgress) await waitForTokenCreation();
+      if (exampleServiceTokenCreationInProgress) await waitForTokenCreation();
       if (shouldCreateNewToken) await createConcurrencyToken();
       await invokeAiService();
     } catch (error) {
@@ -94,7 +97,7 @@ app.post("/test", async (req, res) => {
         }
       } else if (errorMessage.includes("already known")) {
         log("reinvoking due to the blockchain error");
-        tokenCreationInProgress = true;
+        exampleServiceTokenCreationInProgress = true;
         try {
           await recursion();
         } finally {
@@ -106,29 +109,20 @@ app.post("/test", async (req, res) => {
     }
   };
   try {
-    log("local concurrency token", localConcurrencyToken)
-    await recursion(!Boolean(localConcurrencyToken));
+    log("local concurrency token", exampleServiceConcurrencyToken);
+    await recursion(!Boolean(exampleServiceConcurrencyToken));
   } catch (error) {
     log("parent recurssion", error);
   }
 });
 
-app.post("/styletransferai", async (req, res) => {
+app.post("/styletransfer", async (req, res) => {
   const { content, style } = req.body;
-  // try {
-  //   // const response = await aiService(content, style);
-  //   const response = await exampleService(1, 2);
-  //   const outputImageData = response.getData();
-  //   res.send({ base64Image: outputImageData });
-  // } catch (error) {
-  //   console.error("error", error);
-  //   return res.status(500).send(error.message);
-  // }
   const log = (...args) => {
     console.log("reqID: ", req.id, " ", ...args);
   };
-  if (!serviceClient) {
-    serviceClient = await getServiceClient();
+  if (!styleServiceClient) {
+    styleServiceClient = await getStyleServiceClient();
   }
 
   function waitForTokenCreation() {
@@ -136,7 +130,7 @@ app.post("/styletransferai", async (req, res) => {
     return new Promise((resolve, reject) => {
       const checking = setInterval(() => {
         log("waiting for new concurrency Token");
-        if (!tokenCreationInProgress) {
+        if (!styleServiceTokenCreationInProgress) {
           clearInterval(checking);
           resolve();
         }
@@ -147,12 +141,12 @@ app.post("/styletransferai", async (req, res) => {
   const createConcurrencyToken = async () => {
     try {
       log("creating new token");
-      tokenCreationInProgress = true;
-      const { concurrencyToken, channelId } = await serviceClient.getConcurrencyTokenAndChannelId();
+      styleServiceTokenCreationInProgress = true;
+      const { concurrencyToken, channelId } = await styleServiceClient.getConcurrencyTokenAndChannelId();
       log("new token", concurrencyToken);
-      tokenCreationInProgress = false;
-      localConcurrencyToken = concurrencyToken;
-      localChannelId = channelId;
+      styleServiceTokenCreationInProgress = false;
+      styleServiceConcurrencyToken = concurrencyToken;
+      styleServiceChannelId = channelId;
     } catch (error) {
       log("create token error", error);
     }
@@ -160,10 +154,10 @@ app.post("/styletransferai", async (req, res) => {
 
   const invokeAiService = async () => {
     try {
-      serviceClient.setConcurrencyTokenAndChannelId(localConcurrencyToken, localChannelId);
-      const response = await aiService(content, style, serviceClient);
-      log("response", response.getValue());
-      res.send({ output: response.getValue() });
+      styleServiceClient.setConcurrencyTokenAndChannelId(styleServiceConcurrencyToken, styleServiceChannelId);
+      const response = await aiService(content, style, styleServiceClient);
+      const outputImageData = response.getData();
+      res.send({ base64Image: outputImageData });
     } catch (error) {
       log("invoke AI service error", error);
       throw error;
@@ -171,7 +165,7 @@ app.post("/styletransferai", async (req, res) => {
   };
   const run = async (shouldCreateNewToken = false) => {
     try {
-      if (tokenCreationInProgress) await waitForTokenCreation();
+      if (styleServiceTokenCreationInProgress) await waitForTokenCreation();
       if (shouldCreateNewToken) await createConcurrencyToken();
       await invokeAiService();
     } catch (error) {
@@ -191,7 +185,7 @@ app.post("/styletransferai", async (req, res) => {
         }
       } else if (errorMessage.includes("already known")) {
         log("reinvoking due to the blockchain error");
-        tokenCreationInProgress = true;
+        styleServiceTokenCreationInProgress = true;
         try {
           await run();
         } finally {
@@ -203,8 +197,8 @@ app.post("/styletransferai", async (req, res) => {
     }
   };
   try {
-    log("local concurrency token", localConcurrencyToken)
-    await run(!Boolean(localConcurrencyToken));
+    log("local concurrency token", styleServiceConcurrencyToken);
+    await run(!Boolean(styleServiceConcurrencyToken));
   } catch (error) {
     log("parent recurssion", error);
   }

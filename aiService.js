@@ -16,7 +16,7 @@ const sdk = new SnetSDK(config);
 const orgId = "snet";
 const serviceId = "style-transfer";
 const groupName = "default_group";
-const paymentStrategy = new DefaultPaymentStrategy(2);
+const paymentStrategy = new DefaultPaymentStrategy(100);
 let tokenToMakeFreeCall = process.env.FREE_CALL_TOKEN ? process.env.FREE_CALL_TOKEN.toUpperCase() : "";
 tokenToMakeFreeCall = Boolean(tokenToMakeFreeCall)
   ? tokenToMakeFreeCall.startsWith("0X")
@@ -46,7 +46,9 @@ export const getServiceClient = async () => {
       serviceClientOptions
     );
     return serviceClient;
-  } catch (error) {}
+  } catch (error) {
+    console.log("service client create error", error);
+  }
 };
 
 const aiService = async (content = "", style = "", serviceClientWithToken) => {
