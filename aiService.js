@@ -16,7 +16,7 @@ const sdk = new SnetSDK(config);
 const orgId = "snet";
 const serviceId = "style-transfer";
 const groupName = "default_group";
-const paymentStrategy = new DefaultPaymentStrategy(100);
+const paymentStrategy = new DefaultPaymentStrategy(200);
 let tokenToMakeFreeCall = process.env.FREE_CALL_TOKEN ? process.env.FREE_CALL_TOKEN.toUpperCase() : "";
 tokenToMakeFreeCall = Boolean(tokenToMakeFreeCall)
   ? tokenToMakeFreeCall.startsWith("0X")

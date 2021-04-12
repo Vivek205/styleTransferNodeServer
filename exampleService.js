@@ -16,7 +16,7 @@ const sdk = new SnetSDK(config);
 const orgId = "6ce80f485dae487688c3a083688819bb";
 const serviceId = "test_freecall";
 const groupName = "default_group";
-const paymentStrategy = new DefaultPaymentStrategy(100);
+const paymentStrategy = new DefaultPaymentStrategy(300);
 let tokenToMakeFreeCall = process.env.FREE_CALL_TOKEN ? process.env.FREE_CALL_TOKEN.toUpperCase() : "";
 tokenToMakeFreeCall = Boolean(tokenToMakeFreeCall)
   ? tokenToMakeFreeCall.startsWith("0X")
