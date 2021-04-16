@@ -2,6 +2,7 @@ import express from "express";
 import aiService, {getServiceClient as getStyleServiceClient} from "./aiService";
 import exampleService, { getServiceClient as getExampleServiceClient } from "./exampleService";
 import addRequestId from "express-request-id";
+import cors from "cors";
 
 let exampleServiceConcurrencyToken = "";
 let exampleServiceChannelId = "";
@@ -18,6 +19,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use(addRequestId());
+app.use(cors())
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
